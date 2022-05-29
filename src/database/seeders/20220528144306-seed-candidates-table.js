@@ -5,7 +5,7 @@ module.exports = {
     await queryInterface.bulkInsert('candidates', [{
       name: 'Arthur',
       bio: 'I am a full stack javascript developer with experience on mern stack.',
-      email: 'arthur@gmail.com',
+      email: 'arthur123@gmail.com',
       phone: '1111-1111',
       open_to_work: true,
       created_at: new Date(),
@@ -14,7 +14,7 @@ module.exports = {
     {
       name: 'willian',
       bio: 'I am a full stack javascript developer with experience on mern stack.',
-      email: 'willian@gmail.com',
+      email: 'willian123@gmail.com',
       phone: '2222-1111',
       open_to_work: true,
       created_at: new Date(),
