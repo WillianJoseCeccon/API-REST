@@ -34,8 +34,9 @@ export const jobsController = {
     show: async (req: Request, res: Response) => {
         const { id } = req.params
         try {
-            const jobs = await Job.findByPk(id, { include: 'company' })
-            return res.json(jobs)
+            const jobs = await Job.findByPk(id, { include: ['company', 'candidates'] })
+            const candidatesCount = await jobs?.countCandidates()
+            return res.json({ ...jobs?.get(), candidatesCount })
         } catch (err) {
             if (err instanceof Error) {
                 return res.status(400).json({ message: err.message})
@@ -76,5 +77,43 @@ export const jobsController = {
                 return res.status(400).json({ message: err.message})
             }
         }
+    },
+
+    //POST /jobs/:id/addCandidate
+    addCandidate: async (req: Request, res: Response) => {
+        const jobId = req.params.id
+        const { candidateId } = req.body
+
+        try {
+            const job = await Job.findByPk(jobId)
+
+            if (job === null) return res.status(404).json({ message: 'Vaga de Emprego não encontrada'})
+            await job.addCandidate(candidateId)
+            return res.status(201).send()
+        } catch (err) {
+            if (err instanceof Error) {
+                return res.status(400).json({ message: err.message })
+            }
+        }
+    },
+
+    //POST /jobs/:id/removeCandidate
+    removeCandidate: async (req: Request, res: Response) => {
+        const jobId = req.params.id
+        const { candidateId } = req.body
+    
+        try {
+            const job = await Job.findByPk(jobId)
+    
+            if (job === null) return res.status(404).json({ message: 'Vaga de Emprego não encontrada'})
+            
+            await job.removeCandidate(candidateId)
+            return res.status(201).send()
+        } catch (err) {
+            if (err instanceof Error) {
+                return res.status(400).json({ message: err.message })
+            }
+        }
     }
+    
 }
